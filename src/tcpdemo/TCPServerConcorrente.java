@@ -15,12 +15,11 @@ public class TCPServerConcorrente {
 		
 		while (true) {
 			
-			System.out.println("Esperando conn");
+			System.out.println("Esperando conexão");
 			Socket no = serverSocket.accept(); // aceita uma conexão no socket criado
-			System.out.println("Conn aceita");
-			
 			ThreadAtendimento thread =  new ThreadAtendimento(no); // cria uma nova thread nesse socket
 			threadsClients.add(thread); // Adiciona a thread à lista
+			System.out.println("Conexão aceita");
 			
 			thread.start();
 			

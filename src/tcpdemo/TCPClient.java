@@ -10,8 +10,11 @@ public class TCPClient {
 
 	public static void main(String[] args) throws Exception {
 		
+		String clientIP = "127.0.0.1";
+		int clientPort = 9000;
+		
 		// socket criado
-		Socket s =  new Socket("127.0.0.1", 9000);
+		Socket s =  new Socket(clientIP, clientPort);
 		
 		// dados enviados ao servidor		
 		OutputStream os = s.getOutputStream();
@@ -22,21 +25,30 @@ public class TCPClient {
 		BufferedReader reader = new BufferedReader(is);
 		
 		// lê a entrada do usuário no terminal
-		BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));		
+		BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));				
+		String texto = inFromUser.readLine();
 		
-		String texto;
-        while (true) {
-            texto = inFromUser.readLine();
-            writer.writeBytes(texto + "\n");
-
-            String response = reader.readLine();
-            System.out.println("DoServidor: " + response);
-
-            if (texto.equals("EXIT")) {
-                break; // Sai do loop quando digitar "EXIT"
-            }
-        }
-		
+		if (texto.equals("JOIN")) {
+			
+			String joinRequest = "JOIN " + clientIP + " " + clientPort;
+	        writer.writeBytes(joinRequest + "\n");
+			String joinResponse = reader.readLine();
+			System.out.println("server> " + joinResponse);
+			
+	        while (true) {
+	        	
+	        	System.out.println("client> ");
+	            texto = inFromUser.readLine();
+	            writer.writeBytes(texto + "\n");
+	
+	            String response = reader.readLine();
+	            System.out.println("server> " + response);
+	
+	            if (texto.equals("EXIT")) {
+	                break; // Sai do loop quando digitar "EXIT"
+	            }
+	        }
+		}
 		// termina o socket
 		s.close();
 	}
